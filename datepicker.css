@@ -1,25 +1,25 @@
-.datepicker-node {
+.datepicker {
 	display: inline-block;
 	position: relative;
 }
 
-.datepicker {
+.datepicker-active .datepicker-calendar {
+	display: inline-block;
+}
+
+.datepicker-calendar {
+	display: none;
 	position: absolute;
 	top: 100%;
 	left: 0;
 	margin-top: 15px;
-	display: none;
 	font-family: 'Lucida Grande', sans-serif;
 	font-size: 10px;
 	font-weight: 300;
 	color: #454545;
 }
 
-.datepicker-active {
-	display: inline-block;
-}
-
-.datepicker table {
+.datepicker-calendar table {
 	border-collapse: separate;
 	border-spacing: 0;
 }
@@ -189,4 +189,10 @@
 	font-family: sans-serif;
 	font-size: 13px;
 	cursor: pointer;
+	-webkit-transition: .2s all;
+	transition: .2s all;
+}
+
+.datepicker-value:hover {
+	box-shadow: 0 0 0 1px #51A1E4;
 }

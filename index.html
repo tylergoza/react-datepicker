@@ -9,6 +9,14 @@
 	<link rel="stylesheet" href="datepicker.css"/>
 </head>
 <body>
-	<div id="datepicker" class="datepicker-node"></div>
+	<div id="datepicker"></div>
+
+	<script type="text/jsx">
+		var datepicker_instance = React.render(<Datepicker onSetDate={onSetDate} />, document.querySelector('#datepicker'));
+
+		function onSetDate(obj) {
+			console.log('From:', obj.from, 'to', obj.to);
+		}
+	</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 var Datepicker = React.createClass({
 	getInitialState: function() {
-		var current_date = this.props.current_date;
+		var current_date = this.props.current_date || new Date();
 		return {
 			active: false,
 			current_date: current_date,
@@ -46,13 +46,26 @@ var Datepicker = React.createClass({
 				if (this.state.date_from > this.state.date_to) {
 					this.setState({
 						date_to: date
+					}, function() {
+						this.onSetDate();
 					});
 				}
+				this.onSetDate();
 			});
 		} else if (this.state.cursor == 'to') {
 			this.setState({
 				date_to: date,
 				cursor: 'from'
+			}, function() {
+				this.onSetDate();
+			});
+		}
+	},
+	onSetDate: function() {
+		if (this.props.onSetDate) {
+			this.props.onSetDate({
+				from: this.state.date_from,
+				to: this.state.date_to
 			});
 		}
 	},
@@ -88,13 +101,13 @@ var Datepicker = React.createClass({
 			'datepicker-active': this.state.active
 		});
 		return(
-			<div>
+			<div className={classes}>
 				<ValueField
 					show={this.show}
 					date_from={this.formatOutputDate(this.state.date_from)}
 					date_to={this.formatOutputDate(this.state.date_to)}
 					formatOutputDate={this.formatOutputDate}/>
-				<div className={classes}>
+				<div className='datepicker-calendar'>
 					<table>
 						<tr>
 							<td className="datepicker-months-section">
@@ -138,14 +151,13 @@ var Datepicker = React.createClass({
 		);
 	},
 	closeListener: function(event) {
-		console.log(this.getDOMNode());
 		var target = event.target;
 		if (target != this.getDOMNode() && !this.getDOMNode().contains(target)) {
 			this.hide();
 		}
 	},
 	componentDidMount: function() {
-		document.addEventListener('click', this.closeListener.bind(this));
+		document.addEventListener('click', this.closeListener);
 	},
 	componentWillUnmount: function() {
 		document.removeEventListener('click', this.closeListener);
@@ -236,7 +248,7 @@ var Month = React.createClass({
 							date: current_date,
 							today: this.isToday(current_date),
 							disabled: isDisabled.call(this, current_date),
-							in_range: inRange.call(this, current_date)
+							in_range: isInRange.call(this, current_date)
 						};
 					} else {
 						days[i][j] = outside_day_data;
@@ -258,7 +270,7 @@ var Month = React.createClass({
  			return disabled;
 		}
 
-		function inRange(date) {
+		function isInRange(date) {
 			var date_from = getTimeForDate(this.props.date_from);
 			date = getTimeForDate(date);
 			var date_to = getTimeForDate(this.props.date_to);
@@ -400,5 +412,3 @@ var ValueField = React.createClass({
 		);
 	}
 });
-
-var datepicker_instance = React.render(<Datepicker current_date={new Date()} />, document.querySelector('#datepicker'));
