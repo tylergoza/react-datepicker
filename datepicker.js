@@ -28,38 +28,38 @@ var Datepicker = React.createClass({
 		return next_month_date;
 	},
 	goPrevMonth: function() {
-		this.setState(React.addons.update(this.state, {
-			current_date: { $set: this.getPrevMonth(this.state.current_date) }
-		}));
+		this.setState({
+			current_date: this.getPrevMonth(this.state.current_date)
+		});
 	},
 	goNextMonth: function() {
-		this.setState(React.addons.update(this.state, {
-			current_date: { $set: this.getNextMonth(this.state.current_date) }
-		}));
+		this.setState({
+			current_date: this.getNextMonth(this.state.current_date)
+		});
 	},
 	setDate: function(date) {
 		if (this.state.cursor == 'from') {
-			this.setState(React.addons.update(this.state, {
-				date_from: { $set: date },
-				cursor: { $set: 'to' }
-			}), function() {
+			this.setState({
+				date_from: date,
+				cursor: 'to'
+			}, function() {
 				if (this.state.date_from > this.state.date_to) {
-					this.setState(React.addons.update(this.state, {
-						date_to: { $set: date }
-					}));
+					this.setState({
+						date_to: date
+					});
 				}
 			});
 		} else if (this.state.cursor == 'to') {
-			this.setState(React.addons.update(this.state, {
-				date_to: { $set: date },
-				cursor: { $set: 'from' }
-			}));
+			this.setState({
+				date_to: date,
+				cursor: 'from'
+			});
 		}
 	},
 	setCursor: function(cursor) {
-		this.setState(React.addons.update(this.state, {
-			cursor: { $set: cursor }
-		}));
+		this.setState({
+			cursor: cursor
+		});
 	},
 	formatOutputDate: function(date) {
 		return zeros(date.getDate(), 2) + '.' + zeros(date.getMonth() + 1, 2) + '.' + date.getFullYear();
@@ -136,8 +136,21 @@ var Datepicker = React.createClass({
 				</div>
 			</div>
 		);
+	},
+	closeListener: function(event) {
+		console.log(this.getDOMNode());
+		var target = event.target;
+		if (target != this.getDOMNode() && !this.getDOMNode().contains(target)) {
+			this.hide();
+		}
+	},
+	componentDidMount: function() {
+		document.addEventListener('click', this.closeListener.bind(this));
+	},
+	componentWillUnmount: function() {
+		document.removeEventListener('click', this.closeListener);
 	}
-	// <CancelButton hide={this.hide} />
+	//<ResetButton hide={this.hide} />
 });
 
 var Months = React.createClass({
@@ -159,9 +172,8 @@ var Months = React.createClass({
 			}
 
 			return(
-				<td className="datepicker-month-col">
+				<td className="datepicker-month-col" key={date.getTime()}>
 					<Month
-						key={date.getTime()}
 						date={date}
 						setDate={this.props.setDate}
 						today={today}
@@ -269,8 +281,8 @@ var Month = React.createClass({
 	render: function() {
 		// days
 		var days = this.buildMonth(this.props.date);
-		var data = days.map(function(row) {
-			var td = row.map(function(cell) {
+		var data = days.map(function(row, index) {
+			var td = row.map(function(cell, index) {
 				var classes = React.addons.classSet({
 					'datepicker-cell': true,
 					'datepicker-today': cell.today,
@@ -279,20 +291,21 @@ var Month = React.createClass({
 					'datepicker-day-range': cell.in_range
 				});
 				return (<td
+					key={index}
 					data-datepicker-date={cell.date}
 					data-disabled={cell.disabled}
 					className={classes}
 					onClick={this.onDateSelect}>{cell.day}</td>);
 			}, this);
-			return <tr>{td}</tr>;
+			return <tr key={index}>{td}</tr>;
 		}, this);
 
 		// week names
 		var day_of_week_names = this.getDaysOfWeek(),
 			day_of_week;
 		day_of_week_names = day_of_week_names.concat(day_of_week_names.splice(0, this.props.first_day));
-		day_of_week = day_of_week_names.map(function(day_of_week_name) {
-			return (<th className='datepicker-cell datepicker-day-of-week'>{day_of_week_name}</th>);
+		day_of_week = day_of_week_names.map(function(day_of_week_name, index) {
+			return (<th className='datepicker-cell datepicker-day-of-week' key={index}>{day_of_week_name}</th>);
 		});
 
 		// month name
@@ -363,14 +376,14 @@ var SubmitButton = React.createClass({
 	}
 });
 
-var CancelButton = React.createClass({
+var ResetButton = React.createClass({
 	onClick: function(event) {
 		event.preventDefault();
 		this.props.hide();
 	},
 	render: function() {
 		return (
-			<a href='#' className='datepicker-button datepicker-button-cancel' onClick={this.onClick}>Cancel</a>
+			<a href='#' className='datepicker-button datepicker-button-cancel' onClick={this.onClick}>Reset</a>
 		);
 	}
 });
@@ -389,10 +402,3 @@ var ValueField = React.createClass({
 });
 
 var datepicker_instance = React.render(<Datepicker current_date={new Date()} />, document.querySelector('#datepicker'));
-
-document.addEventListener('click', function(event) {
-	var target = event.target;
-	if (target != datepicker_instance.getDOMNode() && !datepicker_instance.getDOMNode().contains(target)) {
-		datepicker_instance.hide();
-	}
-});
