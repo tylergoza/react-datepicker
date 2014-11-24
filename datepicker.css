@@ -28,6 +28,7 @@
 
 .datepicker-months-section,
 .datepicker-control-section {
+	background: #fff;
 	vertical-align: top;
 	padding: 0;
 }

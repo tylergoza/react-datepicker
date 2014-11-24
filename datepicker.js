@@ -5,8 +5,8 @@ var Datepicker = React.createClass({
 			active: false,
 			current_date: current_date,
 			cursor: 'from',
-			date_from: current_date,
-			date_to: current_date
+			date_from: this.props.date_from || current_date,
+			date_to: this.props.date_to || current_date
 		}
 	},
 	getPrevMonth: function(date) {
