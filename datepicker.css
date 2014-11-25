@@ -17,6 +17,7 @@
 	font-size: 10px;
 	font-weight: 300;
 	color: #454545;
+	z-index: 1000;
 }
 
 .datepicker-calendar table {
