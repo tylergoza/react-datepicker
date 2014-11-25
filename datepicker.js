@@ -162,12 +162,10 @@ var Datepicker = React.createClass({
 	componentWillUnmount: function() {
 		document.removeEventListener('click', this.closeListener);
 	}
-	//<ResetButton hide={this.hide} />
 });
 
 var Months = React.createClass({
 	render: function() {
-		var today = new Date();
 		var months = [-1, 0, +1].map(function(index, i){
 			var date;
 
@@ -188,7 +186,6 @@ var Months = React.createClass({
 					<Month
 						date={date}
 						setDate={this.props.setDate}
-						today={today}
 						first_day='1'
 						date_from={this.props.date_from}
 						date_to={this.props.date_to}
@@ -217,7 +214,7 @@ var Month = React.createClass({
 		return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	},
 	isToday: function(date) {
-		return date.toDateString() == this.props.today.toDateString();
+		return date.toDateString() == (new Date()).toDateString();
 	},
 	buildMonth: function(date) {
 		var day = 0,
@@ -259,8 +256,8 @@ var Month = React.createClass({
 
 		function isDisabled(date) {
 			var disabled = false;
-			var date_from = getTimeForDate(this.props.date_from);
-			date = getTimeForDate(date);
+			var date_from = getDateFrom(this.props.date_from);
+			date = getDateFrom(date);
 			if (date < date_from && this.props.cursor == 'to') {
 				disabled = true;
 			}
@@ -271,13 +268,14 @@ var Month = React.createClass({
 		}
 
 		function isInRange(date) {
-			var date_from = getTimeForDate(this.props.date_from);
-			date = getTimeForDate(date);
-			var date_to = getTimeForDate(this.props.date_to);
+			var date_from = getDateFrom(this.props.date_from);
+			date = getDateFrom(date);
+			var date_to = getDateFrom(this.props.date_to);
+			console.log(date_from, date);
 			return date_from <= date && date <= date_to;
 		}
 
-		function getTimeForDate(date) {
+		function getDateFrom(date) {
 			return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 		}
 
@@ -384,18 +382,6 @@ var SubmitButton = React.createClass({
 	render: function() {
 		return (
 			<a href='#' className='datepicker-button' onClick={this.onClick}>Apply</a>
-		);
-	}
-});
-
-var ResetButton = React.createClass({
-	onClick: function(event) {
-		event.preventDefault();
-		this.props.hide();
-	},
-	render: function() {
-		return (
-			<a href='#' className='datepicker-button datepicker-button-cancel' onClick={this.onClick}>Reset</a>
 		);
 	}
 });
