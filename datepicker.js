@@ -61,12 +61,15 @@ var Datepicker = React.createClass({
 			});
 		}
 	},
+	getDate: function() {
+		return {
+			from: this.state.date_from,
+			to: this.state.date_to
+		}
+	},
 	onSetDate: function() {
 		if (this.props.onSetDate) {
-			this.props.onSetDate({
-				from: this.state.date_from,
-				to: this.state.date_to
-			});
+			this.props.onSetDate(this.getDate());
 		}
 	},
 	setCursor: function(cursor) {
