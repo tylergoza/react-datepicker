@@ -271,7 +271,6 @@ var Month = React.createClass({
 			var date_from = getDateFrom(this.props.date_from);
 			date = getDateFrom(date);
 			var date_to = getDateFrom(this.props.date_to);
-			console.log(date_from, date);
 			return date_from <= date && date <= date_to;
 		}
 
