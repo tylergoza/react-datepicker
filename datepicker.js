@@ -1,12 +1,23 @@
 var Datepicker = React.createClass({
+	propTypes: {
+		date_from: React.PropTypes.instanceOf(Date),
+		date_to: React.PropTypes.instanceOf(Date),
+		current_date: React.PropTypes.instanceOf(Date)
+	},
+	getDefaultProps: function() {
+		return {
+			current_date: new Date(),
+			date_from: new Date(),
+			date_to: new Date()
+		}
+	},
 	getInitialState: function() {
-		var current_date = this.props.current_date || new Date();
 		return {
 			active: false,
-			current_date: current_date,
+			current_date: this.props.current_date,
 			cursor: 'from',
-			date_from: this.props.date_from || current_date,
-			date_to: this.props.date_to || current_date
+			date_from: this.props.date_from,
+			date_to: this.props.date_to
 		}
 	},
 	getPrevMonth: function(date) {
