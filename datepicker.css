@@ -29,7 +29,6 @@
 
 .datepicker-months-section,
 .datepicker-control-section {
-	background: #fff;
 	vertical-align: top;
 	padding: 0;
 }
@@ -59,6 +58,7 @@
 .datepicker-month-col {
 	padding: 0;
 	vertical-align: top;
+	background: #fff;
 	border: 1px solid #73b2e6;
 }
 
@@ -124,6 +124,7 @@
 .datepicker-control {
 	padding: 20px;
 	border: 1px solid #a194d5;
+	background: #fff;
 }
 
 .datepicker-range-selector {
@@ -175,6 +176,7 @@
 }
 
 .datepicker-button:hover {
+	text-decoration: none;
 	box-shadow: 0 0 0 1px #a194d5;
 }
 
